@@ -5,9 +5,11 @@ import {ref, onMounted} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
 import Loading from '@/components/Loading.vue';
 import {useGetData} from '@/composables/getData';
+import {useFavoritosStore} from '@/store/favoritos.js';
 
 const route = useRoute();
 const router = useRouter();
+const useFavoritos = useFavoritosStore();
 
 const back = () => {
     router.push('/pokemon');
@@ -16,6 +18,8 @@ const back = () => {
 const pokemon = ref({});
 
 const {data, getData, loading, error}  = useGetData();
+
+const {favoritos, add, findPoke} = useFavoritos;
 
 // const getData = async() => {
     
@@ -50,6 +54,10 @@ getData(`https://pokeapi.co/api/v2/pokemon/${route.params.name}`);
     <div v-else>
         <h1>No se encontró el pokémon</h1>
     </div>
+    <button class="btn btn-primary me-2" @click="add(data)" :disabled="findPoke(data?.name)">
+        Agregar a Favoritos
+    </button>
     <button class="btn btn-outline-primary" @click="back">Volver</button>
+    
     
 </template>
